@@ -81,7 +81,7 @@ extend(Twain.prototype, {
     },
     step: function() {
         var now = new Date().getTime();
-        var period = now - this.now;
+        var period = now - this.time;
         var fraction = Math.min(this.multiplier * period, 1);
         var delta = fraction * (this._to - this._curr);
         var value = this._curr + delta;
@@ -97,10 +97,10 @@ extend(Twain.prototype, {
         }
 
         this.velocity = delta / period;
-        this.now = now;
+        this.time = now;
 
         this.emit('step', {
-            time: this.now,
+            time: this.time,
             period: period,
             fraction: fraction,
             delta: delta,
@@ -113,7 +113,7 @@ extend(Twain.prototype, {
     start: function() {
         if(!this.running) {
             this.running = true;
-            this.time = this.now = new Date().getTime();
+            this.startTime = this.time = new Date().getTime();
             animloop.on('beforedraw', this.step);
 
             if(!animloop.running){

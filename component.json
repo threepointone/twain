@@ -1,0 +1,20 @@
+{
+  "name": "twain",
+  "repo": "threepointone/twain",
+  "description": "dynamic tweening engine",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "threepointone/animloop": "*",
+    "manuelstofer/each": "*",
+    "component/emitter": "*",
+    "component/bind": "*"
+  },
+  "development": {
+    
+    },
+  "license": "MIT",
+  "scripts": [
+    "index.js"
+  ]
+}

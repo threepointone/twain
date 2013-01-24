@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+    <title>twain examples</title>
+    <style>
+        #circles{
+            position: relative;
+            width: 500px;
+            height: 500px;
+            margin: 20px auto;
+            border:1px solid black;
+
+        }
+
+        .circle{
+            position: absolute;
+            top:225px;
+            left:225px;
+            width:50px;
+            height:50px;
+            border:1px solid black;
+            background: #aaa;
+            border-radius: 30px;
+
+        }
+    </style>
+</head>
+<body>
+    <div id='circles'></div>
+
+    <script src="/build/build.js"></script>
+    <script>
+        var each = require('twain/deps/each');
+
+        var circles = document.getElementById('circles');
+        
+        for(var i=0;i<10;i++){
+            var el = document.createElement('div');
+            el.className = 'circle';
+
+            circles.appendChild(el);
+        }
+        
+        var x_tween = require('twain')();     // instantiate a new tween
+        var y_tween = require('twain')();
+
+        x_tween.on('step', function(step){
+            each(circles.childNodes, function(c,i ){
+                c.style.left = ((i/10)*step.value)+ 'px';
+            });
+        });
+
+        y_tween.on('step', function(step){
+            each(circles.childNodes, function(c,i ){
+                c.style.top = ((i/10)*step.value)+ 'px';
+            });
+        });
+
+        circles.addEventListener('mousemove', function(e){
+            x_tween.start();
+            y_tween.start();
+
+            var left = parseInt(circles.offsetLeft);
+            var top = parseInt(circles.offsetTop);
+
+            x_tween.to(e.clientX - left);
+            y_tween.to(e.clientY - top);
+
+        });
+
+
+
+    </script>
+
+</body>
+</html>

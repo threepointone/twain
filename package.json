@@ -1,0 +1,17 @@
+{
+  "name": "twain",
+  "version": "0.0.0",
+  "description": "dynamic tweening engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": "",
+  "keywords": [
+    "dynamic",
+    "tween"
+  ],
+  "author": "Sunil Pai",
+  "license": "BSD",
+  "readmeFilename": "Readme.md"
+}

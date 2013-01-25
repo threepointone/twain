@@ -1,7 +1,9 @@
+//tween.js
 var animloop = require('animloop'),
     emitter = require('emitter'),
     each = require('each'),
-    bind = require('bind');
+    bind = require('bind'),
+    invoke = require('times');
 
 
 // some helper functions
@@ -19,19 +21,22 @@ function extend(obj) {
     return obj;
 }
 
-function clone(obj) {
-    if(Array.isArray(obj)) return obj.slice();
-    var ret = {};
-    for(var key in obj) ret[key] = obj[key];
-    return ret;
-}
-
 function isValue(v) {
     return v != null; // matches undefined and null
 }
 
+function map(o, f) {
+    f = f ||
+    function(i) {
+        return i
+    };
+    var arr = [];
+    each(o, function(v) {
+        arr.push(f(v));
+    });
+    return arr;
+}
 
-module.exports = Twain;
 
 // defaults
 var defaults = {
@@ -47,8 +52,8 @@ var defaults = {
 
 // meat and potatoes
 
-function Twain(obj) {
-    if(!(this instanceof Twain)) return new Twain(obj);
+function Tween(obj) {
+    if(!(this instanceof Tween)) return new Tween(obj);
 
     obj = obj || {};
 
@@ -66,16 +71,16 @@ function Twain(obj) {
     this.velocity = 0;
 }
 
-emitter(Twain.prototype);
+emitter(Tween.prototype);
 
 
-extend(Twain.prototype, {
+extend(Tween.prototype, {
     from: function(from) {
         this._from = this._curr = from;
     },
     to: function(to) {
-        if(!this._from){
-            this.from(to);      
+        if(!this._from) {
+            this.from(to);
         }
         this._to = to;
     },
@@ -116,7 +121,7 @@ extend(Twain.prototype, {
             this.startTime = this.time = new Date().getTime();
             animloop.on('beforedraw', this.step);
 
-            if(!animloop.running){
+            if(!animloop.running) {
                 animloop.start();
             }
 
@@ -130,13 +135,70 @@ extend(Twain.prototype, {
         this.emit('stop');
         return this;
     },
-    
+
     // convenience function to calculate inertial target at a given point
     // todo - calculate rolling average, instead of this._curr directly
-
     inertialTarget: function(acceleration, maxDisplacement) {
         var displacement = Math.min(Math.pow(this.velocity, 2) / (-2 * (acceleration || this.acceleration)), maxDisplacement || this.maxDisplacement);
         return(this._curr + (displacement * (this.velocity > 0 ? 1 : -1)));
     }
 
 });
+
+
+// Twain.js
+
+function Twain(obj) {
+    if(!(this instanceof Twain)) return new Twain(obj);
+    this.config = obj;
+    this.tweens = {};
+}
+
+emitter(Twain.prototype);
+
+extend(Twain.prototype, {
+    // convenience to get a tween for a prop
+    $t: function(prop) {
+        var t = this;
+        if(this.tweens[prop]) {
+            return this.tweens[prop];
+        }
+
+        var tween = Tween(this.config);
+        tween.on('step', function(step) {
+            t.emit('step', extend({}, step, {
+                prop: prop
+            }));
+        });
+
+        return this.tweens[prop] || Tween(this.config);
+    },
+    from: function(from) {
+        var t = this;
+        each(from, function(val, prop) {
+            t.$t(prop).from(val);
+        });
+        return this;
+    },
+
+    to: function(to) {
+        var t = this;
+        each(to, function(val, prop) {
+            t.$t(prop).from(val);
+        });
+        return this;
+    },
+    start: function(prop) {
+        // convenience to start off all/one tweens
+        invoke(prop ? [this.$t(prop)] : map(this.tweens), 'start');
+        return this;
+
+        }, stop: function(prop) {
+            // convenience to stop all/one tweens
+            invoke(prop ? [this.$t(prop)] : map(this.tweens), 'stop');
+            return this;
+
+        }
+    });
+
+module.exports = Twain;

@@ -4,7 +4,8 @@
   "description": "dynamic tweening engine",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/component install && node_modules/.bin/component build --out tests --standalone raf && node_modules/.bin/mocha tests/test.js && rm tests/build.js"
+    "test": "node_modules/.bin/component install && node_modules/.bin/component build --out tests --standalone Twain && node_modules/.bin/mocha tests/test.js && rm tests/build.js",
+    "twain": "node_modules/.bin/component install && node_modules/.bin/component build --standalone Twain && mv build/build.js twain.js && rm -rf build"
   },
   "devDependencies":{
     "component": "*",

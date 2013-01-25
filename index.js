@@ -30,6 +30,7 @@ function map(o, f) {
     function(i) {
         return i
     };
+
     var arr = [];
     each(o, function(v) {
         arr.push(f(v));
@@ -152,6 +153,8 @@ function Twain(obj) {
     if(!(this instanceof Twain)) return new Twain(obj);
     this.config = obj;
     this.tweens = {};
+
+    this.running = true; // this is not dependable
 }
 
 emitter(Twain.prototype);
@@ -164,14 +167,16 @@ extend(Twain.prototype, {
             return this.tweens[prop];
         }
 
-        var tween = Tween(this.config);
+        var tween = this.tweens[prop] = Tween(this.config);
         tween.on('step', function(step) {
             t.emit('step', extend({}, step, {
                 prop: prop
             }));
         });
 
-        return this.tweens[prop] || Tween(this.config);
+        if(this.running) tween.start();
+
+        return tween;
     },
     from: function(from) {
         var t = this;
@@ -184,21 +189,24 @@ extend(Twain.prototype, {
     to: function(to) {
         var t = this;
         each(to, function(val, prop) {
-            t.$t(prop).from(val);
+            t.$t(prop).to(val);
         });
         return this;
     },
     start: function(prop) {
         // convenience to start off all/one tweens
+        this.running = true;
         invoke(prop ? [this.$t(prop)] : map(this.tweens), 'start');
         return this;
 
-        }, stop: function(prop) {
-            // convenience to stop all/one tweens
-            invoke(prop ? [this.$t(prop)] : map(this.tweens), 'stop');
-            return this;
+    },
+    stop: function(prop) {
+        // convenience to stop all/one tweens
+        this.running = false;
+        invoke(prop ? [this.$t(prop)] : map(this.tweens), 'stop');
+        return this;
 
-        }
-    });
+    }
+});
 
 module.exports = Twain;

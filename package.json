@@ -4,8 +4,13 @@
   "description": "dynamic tweening engine",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "node_modules/.bin/component install && node_modules/.bin/component build --out tests --standalone raf && node_modules/.bin/mocha tests/test.js && rm tests/build.js"
   },
+  "devDependencies":{
+    "component": "*",
+    "mocha": "*",
+    "should": "*"
+    },
   "repository": "",
   "keywords": [
     "dynamic",

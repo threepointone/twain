@@ -161,13 +161,13 @@ emitter(Twain.prototype);
 
 extend(Twain.prototype, {
     // convenience to get a tween for a prop
-    $t: function(prop) {
+    $t: function(prop, opts) {
         var t = this;
         if(this.tweens[prop]) {
             return this.tweens[prop];
         }
 
-        var tween = this.tweens[prop] = Tween(this.config);
+        var tween = this.tweens[prop] = Tween(opts || this.config);
         tween.on('step', function(step) {
             t.emit('step', extend({}, step, {
                 prop: prop
@@ -208,5 +208,7 @@ extend(Twain.prototype, {
 
     }
 });
+
+Twain.Tween = Tween;
 
 module.exports = Twain;

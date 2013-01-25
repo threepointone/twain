@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>twain examples</title>
+    <title>twain simple example</title>
     <style>
         #circles{
             position: relative;
@@ -26,18 +26,7 @@
     </style>
 </head>
 <body>
-    <div id='circles'>
-        <div class='circle'></div>
-        <div class='circle'></div>
-        <div class='circle'></div>
-        <div class='circle'></div>
-        <div class='circle'></div>
-        <div class='circle'></div>
-        <div class='circle'></div>
-        <div class='circle'></div>
-        <div class='circle'></div>
-        <div class='circle'></div>
-        <div class='circle'></div>
+    <div id='container'>
 
     </div>
 
@@ -45,30 +34,27 @@
     <script>
         
         var each = require('twain/deps/each'),
-            cnt = document.getElementById('circles'),
-            twain = require('twain')
-            circles = document.querySelectorAll('.circle'); // nodelist, but whatev.        
+            cnt = document.getElementById('container'),
+            twain = require('twain');
 
 
         var tween = twain();    // start up a new tweener
 
+        // for every frame, step events will be emitted for every property. in our case, left and top. 
+        tween.on('step', function(step) {
+            
+        });        
+
+
         // update targets with every mousemove
         cnt.addEventListener('mousemove', function(e) {
             tween.to({
-                top: e.clientY - parseInt(cnt.offsetTop),
-                left: e.clientX - parseInt(cnt.offsetLeft)
+                //
             });
         });
-
-        // for every frame, step events will be emitted for every property. in our case, left and top. 
-        tween.on('step', function(step) {
-            each(circles, function(c, i) {
-                c.style[step.prop] = ((i / 10) * step.value) + 'px';
-            });
-        });
-
+        
+        // and... go!        
         tween.start();
-
 
     </script>
 

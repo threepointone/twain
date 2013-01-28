@@ -64,7 +64,6 @@ function Tween(obj) {
         t[key] = isValue(obj[key]) ? obj[key] : val;
     });
 
-
     t.step = bind(t, t.step);
 
     //tracking vars
@@ -87,7 +86,7 @@ extend(Tween.prototype, {
     },
     step: function() {
         var now = new Date().getTime();
-        var period = now - this.time;
+        var period = now - this.now;
         var fraction = Math.min(this.multiplier * period, 1);
         var delta = fraction * (this._to - this._curr);
         var value = this._curr + delta;
@@ -103,10 +102,10 @@ extend(Tween.prototype, {
         }
 
         this.velocity = delta / period;
-        this.time = now;
+        this.now = now;
 
         this.emit('step', {
-            time: this.time,
+            time: this.now,
             period: period,
             fraction: fraction,
             delta: delta,
@@ -119,7 +118,7 @@ extend(Tween.prototype, {
     start: function() {
         if(!this.running) {
             this.running = true;
-            this.startTime = this.time = new Date().getTime();
+            this.startTime = this.now = new Date().getTime();
             animloop.on('beforedraw', this.step);
 
             if(!animloop.running) {

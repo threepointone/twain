@@ -24,11 +24,11 @@
 
     </div>
 
-    <script src="/twain.js"></script>
+    <script src="/build/build.js"></script>
     <script>
         
         var box = document.getElementById('box'),
-            twain = Twain;
+            twain = require('twain');
 
         var tween = twain();    // start up a new tweener
        

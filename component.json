@@ -9,11 +9,10 @@
     "manuelstofer/each": "*",
     "threepointone/times": "*",
     "component/emitter": "*",
-    "component/bind": "*"
+    "component/bind": "*",
+    "component/ease": "*"
   },
-  "development": {
-    
-    },
+  "development": {},
   "license": "MIT",
   "scripts": [
     "index.js"

@@ -205,7 +205,15 @@ extend(Twain.prototype, {
         invoke(prop ? [this.$t(prop)] : map(this.tweens), 'stop');
         return this;
 
-    }
+    },
+    inertial: function(obj){
+        obj = obj || {};
+        var o = {}, t = this;
+        each(this.tweens, function(tween, prop){
+            o[prop] = tween.inertialTarget.apply(tween, obj[prop]);
+        });
+        return o;
+    };
 });
 
 Twain.Tween = Tween;

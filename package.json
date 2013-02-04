@@ -1,6 +1,6 @@
 {
   "name": "twain",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "dynamic tweening engine",
   "main": "twain.js",
   "scripts": {

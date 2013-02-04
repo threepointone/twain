@@ -2,8 +2,7 @@
 var animloop = require('animloop'),
     emitter = require('emitter'),
     each = require('each'),
-    bind = require('bind'),
-    invoke = require('times');
+    bind = require('bind');
 
 
 // some helper functions
@@ -64,27 +63,25 @@ function Tween(obj) {
         t[key] = isValue(obj[key]) ? obj[key] : val;
     });
 
-    t.step = bind(t, t.step);
 
     //tracking vars
-    this.running = false;
     this.velocity = 0;
 }
-
-emitter(Tween.prototype);
-
 
 extend(Tween.prototype, {
     from: function(from) {
         this._from = this._curr = from;
     },
     to: function(to) {
-        if(!this._from) {
+        if(!isValue(this._from)){
             this.from(to);
         }
         this._to = to;
     },
     step: function() {
+        if(!this.now) {
+            this.startTime = this.now = new Date().getTime();
+        }
         var now = new Date().getTime();
         var period = now - this.now;
         var fraction = Math.min(this.multiplier * period, 1);
@@ -104,35 +101,21 @@ extend(Tween.prototype, {
         this.velocity = delta / period;
         this.now = now;
 
-        this.emit('step', {
+        var step = {
             time: this.now,
             period: period,
             fraction: fraction,
             delta: delta,
             value: value
-        });
+        };
 
-        return this;
+        this.emit('step', step);
+        return step;
 
     },
-    start: function() {
-        if(!this.running) {
-            this.running = true;
-            this.startTime = this.now = new Date().getTime();
-            animloop.on('beforedraw', this.step);
-
-            if(!animloop.running) {
-                animloop.start();
-            }
-
-            this.emit('start');
-        }
-        return this;
-    },
-    stop: function() {
-        this.running = false;
-        animloop.off(this.step);
-        this.emit('stop');
+    reset: function() {
+        this.emit('reset');
+        this.startTime = this.time = null;
         return this;
     },
 
@@ -152,8 +135,9 @@ function Twain(obj) {
     if(!(this instanceof Twain)) return new Twain(obj);
     this.config = obj;
     this.tweens = {};
+    this.step = bind(this, this.step);
 
-    this.running = true; // this is not dependable
+    this.running = false; // this is not dependable
 }
 
 emitter(Twain.prototype);
@@ -167,13 +151,6 @@ extend(Twain.prototype, {
         }
 
         var tween = this.tweens[prop] = Tween(opts || this.config);
-        tween.on('step', function(step) {
-            t.emit('step', extend({}, step, {
-                prop: prop
-            }));
-        });
-
-        if(this.running) tween.start();
 
         return tween;
     },
@@ -192,28 +169,47 @@ extend(Twain.prototype, {
         });
         return this;
     },
+    step: function() {
+        var o = {};
+        each(this.tweens, function(tween, prop) {
+            o[prop] = tween.step().value;
+        });
+        this.emit('step', o);
+        return o;
+    },
     start: function(prop) {
         // convenience to start off all/one tweens
+        if(!this.running) {
+            this.running = true;
+            animloop.on('beforedraw', this.step);
+            this.emit('start');
+        }
+
+        if(!animloop.running) {
+            animloop.start();
+        }
+
         this.running = true;
-        invoke(prop ? [this.$t(prop)] : map(this.tweens), 'start');
         return this;
 
     },
     stop: function(prop) {
         // convenience to stop all/one tweens
         this.running = false;
-        invoke(prop ? [this.$t(prop)] : map(this.tweens), 'stop');
+        animloop.off(this.step);
+        this.emit('stop');
         return this;
 
     },
-    inertial: function(obj){
+    inertial: function(obj) {
         obj = obj || {};
-        var o = {}, t = this;
-        each(this.tweens, function(tween, prop){
+        var o = {},
+            t = this;
+        each(this.tweens, function(tween, prop) {
             o[prop] = tween.inertialTarget.apply(tween, obj[prop]);
         });
         return o;
-    };
+    }
 });
 
 Twain.Tween = Tween;

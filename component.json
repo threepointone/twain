@@ -7,10 +7,8 @@
   "dependencies": {
     "threepointone/animloop": "*",
     "manuelstofer/each": "*",
-    "threepointone/times": "*",
     "component/emitter": "*",
-    "component/bind": "*",
-    "component/ease": "*"
+    "component/bind": "*"
   },
   "development": {},
   "license": "MIT",

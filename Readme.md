@@ -18,7 +18,11 @@ var box = document.getElementById('box'),
 var tween = twain();    // start up a new tweener
 
 tween.on('step', function(step) {
-    box.style[step.prop] = step.value + 'px';
+    for(var prop in step){
+        box.style[prop] = step[prop] + 'px';
+    }
+    // if you had jquery, you could do -
+    // $(box).css(step);
 });
 
 // update targets with every mousemove

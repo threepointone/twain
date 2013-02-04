@@ -39,7 +39,6 @@
     }
 
 
-
     // defaults for a single tweener. pass these params into constructor to change the nature of the animation
     var defaults = {
         // used for snapping, since the default algo doesn't

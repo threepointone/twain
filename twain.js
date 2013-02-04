@@ -262,30 +262,6 @@ function runloop(){
 
 
 });
-require.register("manuelstofer-each/index.js", function(exports, require, module){
-"use strict";
-
-var nativeForEach = [].forEach;
-
-// Underscore's each function
-module.exports = function (obj, iterator, context) {
-    if (obj == null) return;
-    if (nativeForEach && obj.forEach === nativeForEach) {
-        obj.forEach(iterator, context);
-    } else if (obj.length === +obj.length) {
-        for (var i = 0, l = obj.length; i < l; i++) {
-            if (iterator.call(context, obj[i], i, obj) === {}) return;
-        }
-    } else {
-        for (var key in obj) {
-            if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                if (iterator.call(context, obj[key], key, obj) === {}) return;
-            }
-        }
-    }
-};
-
-});
 require.register("component-emitter/index.js", function(exports, require, module){
 
 /**
@@ -437,49 +413,36 @@ Emitter.prototype.hasListeners = function(event){
 };
 
 });
-require.register("component-bind/index.js", function(exports, require, module){
-
-/**
- * Slice reference.
- */
-
-var slice = [].slice;
-
-/**
- * Bind `obj` to `fn`.
- *
- * @param {Object} obj
- * @param {Function|String} fn or string
- * @return {Function}
- * @api public
- */
-
-module.exports = function(obj, fn){
-  if ('string' == typeof fn) fn = obj[fn];
-  if ('function' != typeof fn) throw new Error('bind() requires a function');
-  var args = [].slice.call(arguments, 2);
-  return function(){
-    return fn.apply(obj, args.concat(slice.call(arguments)));
-  }
-};
-
-});
 require.register("twain/index.js", function(exports, require, module){
 //tween.js
 var animloop = require('animloop'),
-    emitter = require('emitter'),
-    each = require('each'),
-    bind = require('bind');
-
+    emitter = require('emitter');
 
 // some helper functions
-var isArray = Array.isArray ||
-function(obj) {
-    return toString.call(obj) == '[object Array]';
-};
+
+
+var nativeForEach = [].forEach,
+    slice = Array.prototype.slice;
+function each(obj, iterator, context) {
+    if(obj == null) return;
+    if(nativeForEach && obj.forEach === nativeForEach) {
+        obj.forEach(iterator, context);
+    } else if(obj.length === +obj.length) {
+        for(var i = 0, l = obj.length; i < l; i++) {
+            if(iterator.call(context, obj[i], i, obj) === {}) return;
+        }
+    } else {
+        for(var key in obj) {
+            if(Object.prototype.hasOwnProperty.call(obj, key)) {
+                if(iterator.call(context, obj[key], key, obj) === {}) return;
+            }
+        }
+    }
+}
+
 
 function extend(obj) {
-    each(Array.prototype.slice.call(arguments, 1), function(source) {
+    each(slice.call(arguments, 1), function(source) {
         for(var prop in source) {
             obj[prop] = source[prop];
         }
@@ -491,18 +454,6 @@ function isValue(v) {
     return v != null; // matches undefined and null
 }
 
-function map(o, f) {
-    f = f ||
-    function(i) {
-        return i
-    };
-
-    var arr = [];
-    each(o, function(v) {
-        arr.push(f(v));
-    });
-    return arr;
-}
 
 
 // defaults
@@ -530,17 +481,18 @@ function Tween(obj) {
         t[key] = isValue(obj[key]) ? obj[key] : val;
     });
 
-
     //tracking vars
     this.velocity = 0;
 }
+
+emitter(Tween.prototype);
 
 extend(Tween.prototype, {
     from: function(from) {
         this._from = this._curr = from;
     },
     to: function(to) {
-        if(!isValue(this._from)){
+        if(!isValue(this._from)) {
             this.from(to);
         }
         this._to = to;
@@ -602,9 +554,14 @@ function Twain(obj) {
     if(!(this instanceof Twain)) return new Twain(obj);
     this.config = obj;
     this.tweens = {};
-    this.step = bind(this, this.step);
+    var t = this;
 
-    this.running = false; // this is not dependable
+    var _step = this.step;
+    this.step = function(){
+        _step.apply(t, arguments);
+    }
+
+    this.running = false;
 }
 
 emitter(Twain.prototype);
@@ -650,10 +607,11 @@ extend(Twain.prototype, {
             this.running = true;
             animloop.on('beforedraw', this.step);
             this.emit('start');
-        }
 
-        if(!animloop.running) {
-            animloop.start();
+            if(!animloop.running) {
+                animloop.start();
+            }
+
         }
 
         this.running = true;
@@ -688,11 +646,7 @@ require.alias("threepointone-raf/index.js", "threepointone-animloop/deps/raf/ind
 
 require.alias("component-emitter/index.js", "threepointone-animloop/deps/emitter/index.js");
 
-require.alias("manuelstofer-each/index.js", "twain/deps/each/index.js");
-
 require.alias("component-emitter/index.js", "twain/deps/emitter/index.js");
-
-require.alias("component-bind/index.js", "twain/deps/bind/index.js");
 
 if (typeof exports == "object") {
   module.exports = require("twain");

@@ -6,9 +6,7 @@
   "keywords": [],
   "dependencies": {
     "threepointone/animloop": "*",
-    "manuelstofer/each": "*",
-    "component/emitter": "*",
-    "component/bind": "*"
+    "component/emitter": "*"
   },
   "development": {},
   "license": "MIT",

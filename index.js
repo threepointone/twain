@@ -1,18 +1,32 @@
 //tween.js
 var animloop = require('animloop'),
-    emitter = require('emitter'),
-    each = require('each'),
-    bind = require('bind');
-
+    emitter = require('emitter');
 
 // some helper functions
-var isArray = Array.isArray ||
-function(obj) {
-    return toString.call(obj) == '[object Array]';
-};
+
+
+var nativeForEach = [].forEach,
+    slice = Array.prototype.slice;
+function each(obj, iterator, context) {
+    if(obj == null) return;
+    if(nativeForEach && obj.forEach === nativeForEach) {
+        obj.forEach(iterator, context);
+    } else if(obj.length === +obj.length) {
+        for(var i = 0, l = obj.length; i < l; i++) {
+            if(iterator.call(context, obj[i], i, obj) === {}) return;
+        }
+    } else {
+        for(var key in obj) {
+            if(Object.prototype.hasOwnProperty.call(obj, key)) {
+                if(iterator.call(context, obj[key], key, obj) === {}) return;
+            }
+        }
+    }
+}
+
 
 function extend(obj) {
-    each(Array.prototype.slice.call(arguments, 1), function(source) {
+    each(slice.call(arguments, 1), function(source) {
         for(var prop in source) {
             obj[prop] = source[prop];
         }
@@ -24,18 +38,6 @@ function isValue(v) {
     return v != null; // matches undefined and null
 }
 
-function map(o, f) {
-    f = f ||
-    function(i) {
-        return i
-    };
-
-    var arr = [];
-    each(o, function(v) {
-        arr.push(f(v));
-    });
-    return arr;
-}
 
 
 // defaults
@@ -63,17 +65,18 @@ function Tween(obj) {
         t[key] = isValue(obj[key]) ? obj[key] : val;
     });
 
-
     //tracking vars
     this.velocity = 0;
 }
+
+emitter(Tween.prototype);
 
 extend(Tween.prototype, {
     from: function(from) {
         this._from = this._curr = from;
     },
     to: function(to) {
-        if(!isValue(this._from)){
+        if(!isValue(this._from)) {
             this.from(to);
         }
         this._to = to;
@@ -135,9 +138,14 @@ function Twain(obj) {
     if(!(this instanceof Twain)) return new Twain(obj);
     this.config = obj;
     this.tweens = {};
-    this.step = bind(this, this.step);
+    var t = this;
 
-    this.running = false; // this is not dependable
+    var _step = this.step;
+    this.step = function(){
+        _step.apply(t, arguments);
+    }
+
+    this.running = false;
 }
 
 emitter(Twain.prototype);
@@ -183,10 +191,11 @@ extend(Twain.prototype, {
             this.running = true;
             animloop.on('beforedraw', this.step);
             this.emit('start');
-        }
 
-        if(!animloop.running) {
-            animloop.start();
+            if(!animloop.running) {
+                animloop.start();
+            }
+
         }
 
         this.running = true;

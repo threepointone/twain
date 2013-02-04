@@ -1,9 +1,9 @@
 (function(name, definition) {
 
-    if(typeof define == 'function') define(definition);
-    else if(typeof module != 'undefined') module.exports = definition();
+    if(typeof define === 'function') define(definition);
+    else if(typeof module !== 'undefined') module.exports = definition();
     else this[name] = definition();
-    
+
 })('Twain', function() {
 
     // some helper functions
@@ -40,7 +40,6 @@
         return v != null; // matches undefined and null
     }
 
-
     // defaults for a single tweener. pass these params into constructor to change the nature of the animation
     var defaults = {
         // used for snapping, since the default algo doesn't
@@ -59,7 +58,6 @@
 
 
     // meat and potatoes
-
     function Tween(obj) {
         if(!(this instanceof Tween)) return new Tween(obj);
         obj = obj || {};
@@ -87,14 +85,11 @@
         },
         // run one step of the tween. updates internal variables, and return spec object for this 'instant'
         step: function() {
-            if(!this._now) {
-                this.startTime = this._now = this.now();
-            }
-
+            this.time || (this.time = this.now());            
             // this is the heart of the whole thing, really. 
             // a simple implementation of an exponential smoothing function
             var now = this.now(),
-                period = now - this._now,
+                period = now - this.time,
                 fraction = Math.min(this.multiplier * period, 1),
                 delta = fraction * (this._to - this._curr),
                 value = this._curr + delta;
@@ -110,10 +105,10 @@
             }
             // todo - this has to be a smoother average, so we can use it for inertia calculations
             this.velocity = delta / period;
-            this._now = now;
+            this.time = now;
 
             var step = {
-                time: this._now,
+                time: this.time,
                 period: period,
                 fraction: fraction,
                 delta: delta,
@@ -136,9 +131,9 @@
             return this;
 
         },
-        // resets time vars so that next time it starts with a fresh pair
+        // resets time var so that next time it starts with a fresh value
         reset: function() {
-            this.startTime = this.time = null;
+            this.time = null;
             return this;
         },
 

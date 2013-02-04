@@ -9,7 +9,7 @@
 
 ## API
 
-from `examples/index.html`
+from `examples/basic.html`
 ```js
 
 var box = document.getElementById('box'),
@@ -44,3 +44,9 @@ setInterval(function(){
 ## License
 
   MIT
+
+### bits and pieces from
+
+- [manuelstofer/each](https://github.com/manuelstofer/each)
+- [component/tween](https://github.com/component/tween)
+- [ded/morpheus](https://github.com/ded/morpheus/)

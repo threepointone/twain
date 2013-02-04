@@ -1,4 +1,4 @@
-var Twain = require('./build'),
+var Twain = require('../twain'),
     Tween = Twain.Tween,
     __should = require('should');
 

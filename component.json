@@ -5,12 +5,10 @@
   "version": "0.0.1",
   "keywords": [],
   "dependencies": {
-    "threepointone/animloop": "*",
-    "component/emitter": "*"
   },
   "development": {},
   "license": "MIT",
   "scripts": [
-    "index.js"
+    "twain.js"
   ]
 }

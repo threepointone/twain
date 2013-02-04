@@ -21,7 +21,6 @@
             border:1px solid #888;
             background: #aaa;
             border-radius: 30px;
-
         }
     </style>
 </head>
@@ -41,16 +40,14 @@
 
     </div>
 
-    <script src="/build/build.js"></script>
+    <script src="/twain.js"></script>
     <script>
         
-        var each = require('twain/deps/each'),
-            cnt = document.getElementById('circles'),
-            twain = require('twain')
+        
+        var cnt = document.getElementById('circles'),
+            tween = Twain(),
             circles = document.querySelectorAll('.circle'); // nodelist, but whatev.        
 
-
-        var tween = twain();    // start up a new tweener
 
         // update targets with every mousemove
         cnt.addEventListener('mousemove', function(e) {
@@ -61,14 +58,17 @@
         });
 
         // for every frame, step events will be emitted for every property. in our case, left and top. 
-        tween.on('step', function(step) {
-            each(circles, function(c, i) {
-                c.style[step.prop] = ((i / 10) * step.value) + 'px';
-            });
+        tween.update(function(step) {
+            for(var prop in step){
+                for(var i=0, j=circles.length;i<j;i++){
+                    circles[i].style[prop] = ((i / 10) * step[prop]) + 'px';
+                }    
+            }            
         });
 
-        tween.start();
-
+        setInterval(function(){
+            tween.update();
+        }, 1000/60);
 
     </script>
 

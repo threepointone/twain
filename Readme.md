@@ -17,7 +17,7 @@ var box = document.getElementById('box'),
 
 var tween = twain();    // start up a new tweener
 
-tween.on('step', function(step) {
+tween.update(function(step) {
     for(var prop in step){
         box.style[prop] = step[prop] + 'px';
     }
@@ -29,12 +29,13 @@ tween.on('step', function(step) {
 document.body.addEventListener('mousemove', function(e) {
     tween.to({
         left: e.clientX,
-        top:e.clientY
+        top:  e.clientY
     });
 });
 
-// and... go!
-tween.start();
+setInterval(function(){
+    tween.update();
+}, 1000/60)
 
 ```   
 

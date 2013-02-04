@@ -13,16 +13,18 @@ from `examples/index.html`
 ```js
 
 var box = document.getElementById('box'),
-    twain = require('twain');
+    tween = Twain();    // start up a new tweener
 
-var tween = twain();    // start up a new tweener
 
 tween.update(function(step) {
+    // step.left, step.top have values to be set
     for(var prop in step){
         box.style[prop] = step[prop] + 'px';
     }
-    // if you had jquery, you could do -
+
+    // fyi: if you had jquery, you could do -
     // $(box).css(step);
+
 });
 
 // update targets with every mousemove

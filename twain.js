@@ -1,7 +1,9 @@
 (function(name, definition) {
+
     if(typeof define == 'function') define(definition);
     else if(typeof module != 'undefined') module.exports = definition();
     else this[name] = definition();
+    
 })('Twain', function() {
 
     // some helper functions
@@ -156,18 +158,16 @@
 
     function Twain(obj) {
         if(!(this instanceof Twain)) return new Twain(obj);
-        var t = this;
-        
+        var t = this,
+            _step = t.step;
+
         extend(t, {
             config: obj,
-            tweens: {}
+            tweens: {},
+            step: function() {
+                _step.apply(t, arguments);
+            }
         });
-
-
-        var _step = t.step;
-        t.step = function() {
-            _step.apply(t, arguments);
-        };
 
     }
 
@@ -192,6 +192,7 @@
             });
             return this;
         },
+
         current: function() {
             var o = {};
             each(this.tweens, function(tween, prop) {
@@ -199,6 +200,7 @@
             });
             return o;
         },
+
         step: function() {
             var o = {};
             each(this.tweens, function(tween, prop) {
@@ -207,14 +209,17 @@
             this._update(o);
             return o;
         },
+
         _update: function() {
             // blank
         },
+
         update: function(fn) {
             if(!fn) return this.step();
             this._update = fn;
             return this;
         },
+
         inertial: function(obj) {
             obj = obj || {};
             var o = {};

@@ -27,6 +27,14 @@
         }
     }
 
+    function collect(obj, fn){
+        var o = {};
+        each(obj, function(el, index){
+            o[index] = typeof fn === 'string'? el[fn] : fn(el, index);
+        });
+        return o;
+    }
+
     function extend(obj) {
         each(slice.call(arguments, 1), function(source) {
             for(var prop in source) {
@@ -169,7 +177,7 @@
     extend(Twain.prototype, {
         // convenience to get a tween for a prop
         $t: function(prop, opts) {
-            return(this.tweens[prop] || (this.tweens[prop] = Tween(extend({}, this.config, opts))));
+            return(this.tweens[prop] || (this.tweens[prop] = Twain.Tween(extend({}, this.config, opts))));
         },
 
         from: function(from) {
@@ -188,19 +196,15 @@
             return this;
         },
 
-        current: function() {
-            var o = {};
-            each(this.tweens, function(tween, prop) {
-                o[prop] = tween._curr;
-            });
-            return o;
+        curr: function() {
+            return collect(this.tweens, '_curr');
         },
 
         step: function() {
-            var o = {};
-            each(this.tweens, function(tween, prop) {
-                o[prop] = tween.step().value;
+            var o = collect(this.tweens, function(tween){
+                return tween.step().value;
             });
+            
             this._update(o);
             return o;
         },
@@ -217,11 +221,10 @@
 
         inertial: function(obj) {
             obj = obj || {};
-            var o = {};
-            each(this.tweens, function(tween, prop) {
-                o[prop] = tween.inertialTarget.apply(tween, obj[prop]);
-            });
-            return o;
+
+            return collect(this.tweens, function(tween, prop){
+                return tween.inertialTarget.apply(tween, obj[prop]);
+            });            
         }
     });
 

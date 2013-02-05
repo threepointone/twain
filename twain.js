@@ -147,7 +147,7 @@
 
         // convenience function to calculate inertial target at a given point
         // todo - calculate rolling average, instead of this.curr directly
-        inertialTarget: function(acceleration, maxDisplacement) {
+        inertial: function(acceleration, maxDisplacement) {
             var displacement = Math.min(Math.pow(this.velocity, 2) / (-2 * (acceleration || this.acceleration)), maxDisplacement || this.maxDisplacement);
             return(this.curr + (displacement * (this.velocity > 0 ? 1 : -1)));
         }
@@ -223,7 +223,7 @@
             obj = obj || {};
 
             return collect(this.tweens, function(tween, prop){
-                return tween.inertialTarget.apply(tween, obj[prop]);
+                return tween.inertial.apply(tween, obj[prop]);
             });            
         }
     });

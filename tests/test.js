@@ -1,7 +1,15 @@
 var Twain = require('../twain'),
     Tween = Twain.Tween,
     util = Twain.util,
-    __should = require('should');
+    should = require('should');
+
+var time = 0;
+var ticker = function(){
+    return time;
+};
+ticker.tick = function(){
+    time++;
+};
 
 describe('util', function() {
 
@@ -82,20 +90,32 @@ describe('util', function() {
                 c: sample('c')
             };
 
-            (util.collect(obj, function(o){
+            (util.collect(obj, function(o) {
                 return o.fn();
-            })).should.eql({a:'a', b:'b', c:'c'});
+            })).should.eql({
+                a: 'a',
+                b: 'b',
+                c: 'c'
+            });
 
-            (util.collect(obj, 'gabba')).should.eql({a:'a', b:'b', c:'c'});
+            (util.collect(obj, 'gabba')).should.eql({
+                a: 'a',
+                b: 'b',
+                c: 'c'
+            });
 
         });
-
-
     });
 });
 
 describe('Tween', function() {
     describe('defaults', function() {
+        it('should initialize neatly', function() {
+            var o = Tween();
+            util.each(['threshold', 'multiplier', 'acceleration', 'maxDisplacement', 'now'], function(param, i) {
+                should.exist(o[param]);
+            });
+        });
 
     });
 
@@ -120,6 +140,9 @@ describe('Tween', function() {
     });
 
     describe('inertial', function() {
+
+    });
+    describe('now', function() {
 
     });
 

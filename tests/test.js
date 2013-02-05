@@ -3,12 +3,16 @@ var Twain = require('../twain'),
     util = Twain.util,
     should = require('should');
 
+
 var time = 0;
-var ticker = function(){
-    return time;
-};
-ticker.tick = function(){
+var ticker = function() {
+        return time;
+    };
+ticker.tick = function() {
     time++;
+};
+ticker.reset = function() {
+    time = 0;
 };
 
 describe('util', function() {
@@ -119,30 +123,41 @@ describe('Tween', function() {
 
     });
 
-    describe('from', function() {
-
-    });
-
-    describe('to', function() {
-
-    });
-
     describe('step', function() {
+        it('should take a step', function() {
+            ticker.reset();
+            var t = Tween({
+                now: ticker,
+                multiplier: 0.15
+            });
+
+
+            t.from(0).to(1);
+            // first tick and update to get the basics set
+            ticker.tick();
+            t.update();
+
+            // next tick should start the tweening
+            ticker.tick();
+            t.update();
+            (t.curr === 0.15).should.be.ok;
+
+            // one more time to be sure
+            ticker.tick();
+            t.update();
+
+            (Math.abs(t.curr - 0.2775) < 0.001).should.be.ok;
+
+        });
+
+
 
     });
-
-    describe('update', function() {
-
-    });
-
     describe('reset', function() {
 
     });
 
     describe('inertial', function() {
-
-    });
-    describe('now', function() {
 
     });
 

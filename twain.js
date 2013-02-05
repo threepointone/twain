@@ -83,6 +83,7 @@
         // Number: defines 'origin', ie - the number to start from
         from: function(from) {
             this._from = this.curr = from;
+            return this;
         },
         // Number: defines 'destinations', ie - the number to go to
         to: function(to) {
@@ -90,10 +91,12 @@
                 this.from(to);
             }
             this._to = to;
+            return this;
         },
         // run one step of the tween. updates internal variables, and return spec object for this 'instant'
         step: function() {
-            this.time || (this.time = this.now());            
+            isValue(this.time) || (this.time = this.now());            
+
             // this is the heart of the whole thing, really. 
             // a simple implementation of an exponential smoothing function
             var now = this.now(),
@@ -101,6 +104,7 @@
                 fraction = Math.min(this.multiplier * period, 1),
                 delta = fraction * (this._to - this.curr),
                 value = this.curr + delta;
+
 
             // snap if we're close enough to the target (defined by `this.threshold`)
             if(Math.abs(this._to - value) < this.threshold) {

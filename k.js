@@ -7,9 +7,8 @@ require('k')({
     }]
 })
 .chain()
+.clean()
 .read()
-.write()
-.log('built twain.js')
 .compress().write()
 .log('built twain.min.js')
 .fail(function(err){

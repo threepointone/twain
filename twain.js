@@ -229,6 +229,13 @@
     });
 
     Twain.Tween = Tween;
+    
+    Twain.util = {
+        isValue: isValue,
+        extend: extend,
+        each: each,
+        collect: collect
+    };
 
     return Twain;
 

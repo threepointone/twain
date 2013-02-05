@@ -204,11 +204,8 @@ describe('Twain', function() {
             ticker.reset();
 
         });
-
-        describe('stop', function() {
-            it('should allow an animation to be paused and restarted');
-        });
-
-
+    });
+    describe('stop', function() {
+        it('should allow an animation to be paused and restarted');
     });
 });

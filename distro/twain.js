@@ -228,6 +228,8 @@
         }
     });
 
+    // export some pieces 
+    
     Twain.Tween = Tween;
     
     Twain.util = {

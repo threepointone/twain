@@ -3,60 +3,81 @@ var Twain = require('../twain'),
     util = Twain.util,
     __should = require('should');
 
-describe('util', function(){
-    describe('each', function(){
+describe('util', function() {
+    describe('each', function() {
 
     });
 
-    describe('each', function(){
-        
-    });
-
-    describe('isValue', function(){
-        
-    });
-
-    describe('extend', function(){
+    describe('each', function() {
 
     });
 
-    describe('collect', function(){
+    describe('isValue', function() {
+
+    });
+
+    describe('extend', function() {
+
+    });
+
+    describe('collect', function() {
 
     });
 });
 
-describe('Tween', function(){
-    describe('defaults', function(){
+describe('Tween', function() {
+    describe('defaults', function() {
 
     });
 
-    describe('from', function(){
-
-    });    
-
-    describe('to', function(){
-        
-    });
-
-    describe('step', function(){
+    describe('from', function() {
 
     });
 
-    describe('update', function(){
-        
-    });
-
-    describe('reset', function(){
+    describe('to', function() {
 
     });
 
-    describe('inertial', function(){
-        
+    describe('step', function() {
+
+    });
+
+    describe('update', function() {
+
+    });
+
+    describe('reset', function() {
+
+    });
+
+    describe('inertial', function() {
+
     });
 
 });
 
-describe('Twain', function(){
+describe('Twain', function() {
+    describe('$t', function() {
 
+    });
+
+    describe('from', function() {
+
+    });
+
+    describe('to', function() {
+
+    });
+
+    describe('step', function() {
+
+    });
+
+    describe('update', function() {
+
+    });
+
+    describe('inertial', function() {
+
+    });
 });
-

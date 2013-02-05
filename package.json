@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/mocha tests/test.js --reporter list",
-    "coverage": "rm -rf lib-cov/ && jscoverage lib lib-cov && ./node_modules/.bin/mocha tests/test.js --reporter html-cov > coverage.html && open coverage.html && rm -rf lib-cov"
+    "coverage": "rm -rf lib-cov/ && jscoverage lib lib-cov && TWAIN_COV=1 ./node_modules/.bin/mocha tests/test.js --reporter html-cov > coverage.html && open coverage.html && rm -rf lib-cov"
   },
   "devDependencies":{
     "k":"git://github.com/threepointone/k.git",

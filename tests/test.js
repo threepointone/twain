@@ -1,4 +1,4 @@
-var Twain = require('../'),
+var Twain = process.env.TWAIN_COV? require('../lib-cov/twain') : require('../lib/twain'),
     Tween = Twain.Tween,
     util = Twain.util,
     should = require('should');

@@ -82,7 +82,7 @@
     extend(Tween.prototype, {
         // Number: defines 'origin', ie - the number to start from
         from: function(from) {
-            this._from = this._curr = from;
+            this._from = this.curr = from;
         },
         // Number: defines 'destinations', ie - the number to go to
         to: function(to) {
@@ -99,17 +99,17 @@
             var now = this.now(),
                 period = now - this.time,
                 fraction = Math.min(this.multiplier * period, 1),
-                delta = fraction * (this._to - this._curr),
-                value = this._curr + delta;
+                delta = fraction * (this._to - this.curr),
+                value = this.curr + delta;
 
             // snap if we're close enough to the target (defined by `this.threshold`)
             if(Math.abs(this._to - value) < this.threshold) {
-                delta = this._to - this._curr;
-                this._curr = value = this._to;
+                delta = this._to - this.curr;
+                this.curr = value = this._to;
                 fraction = 1;
 
             } else {
-                this._curr = value;
+                this.curr = value;
             }
             // todo - this has to be a smoother average, so we can use it for inertia calculations
             this.velocity = delta / period;
@@ -146,10 +146,10 @@
         },
 
         // convenience function to calculate inertial target at a given point
-        // todo - calculate rolling average, instead of this._curr directly
+        // todo - calculate rolling average, instead of this.curr directly
         inertialTarget: function(acceleration, maxDisplacement) {
             var displacement = Math.min(Math.pow(this.velocity, 2) / (-2 * (acceleration || this.acceleration)), maxDisplacement || this.maxDisplacement);
-            return(this._curr + (displacement * (this.velocity > 0 ? 1 : -1)));
+            return(this.curr + (displacement * (this.velocity > 0 ? 1 : -1)));
         }
 
     });
@@ -197,7 +197,7 @@
         },
 
         curr: function() {
-            return collect(this.tweens, '_curr');
+            return collect(this.tweens, 'curr');
         },
 
         step: function() {

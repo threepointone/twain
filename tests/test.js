@@ -1,4 +1,4 @@
-var Twain = process.env.TWAIN_COV? require('../lib-cov/twain') : require('../lib/twain'),
+var Twain = process.env.TWAIN_COV ? require('../lib-cov/twain') : require('../lib/twain'),
     Tween = Twain.Tween,
     util = Twain.util,
     should = require('should');
@@ -31,7 +31,8 @@ describe('util', function() {
         });
 
         it('should cycle through an object', function() {
-            var str = '', pre= '',
+            var str = '',
+                pre = '',
                 obj = {
                     a: 1,
                     b: 2,
@@ -39,7 +40,7 @@ describe('util', function() {
                 };
 
             util.each(obj, function(el, key) {
-                pre+=key;
+                pre += key;
                 str += el;
             });
             pre.should.equal('abc');
@@ -117,7 +118,7 @@ describe('Tween', function() {
     describe('defaults', function() {
         it('should initialize neatly', function() {
             var o = Tween();
-            util.each(['threshold', 'multiplier', 'acceleration', 'maxDisplacement', 'now'], function(param, i) {
+            util.each(['threshold', 'multiplier', 'now'], function(param, i) {
                 should.exist(o[param]);
             });
         });
@@ -155,12 +156,8 @@ describe('Tween', function() {
 
 
     });
-    describe('reset', function() {
-
-    });
-
-    describe('inertial', function() {
-
+    describe('stop', function() {
+        it('should allow an animation to be paused and restarted');
     });
 
 });
@@ -208,10 +205,10 @@ describe('Twain', function() {
 
         });
 
+        describe('stop', function() {
+            it('should allow an animation to be paused and restarted');
+        });
 
-    });
-
-    describe('inertial', function() {
 
     });
 });

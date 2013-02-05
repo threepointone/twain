@@ -119,17 +119,16 @@
             this.velocity = delta / period;
             this.time = now;
 
-            var step = {
+
+            this._update({
                 time: this.time,
                 period: period,
                 fraction: fraction,
                 delta: delta,
                 value: value
-            };
+            });
 
-            this._update(step);
-
-            return step;
+            return this;
 
         },
         // default handler for every step. change this by using this.update(fn)
@@ -204,13 +203,11 @@
             return collect(this.tweens, 'curr');
         },
 
-        step: function() {
-            var o = collect(this.tweens, function(tween){
-                return tween.step().value;
-            });
-            
-            this._update(o);
-            return o;
+        step: function() {            
+            this._update(collect(this.tweens, function(tween){
+                return tween.step().curr;
+            }));
+            return this;
         },
 
         _update: function() {

@@ -165,14 +165,24 @@ describe('Tween', function() {
 
 describe('Twain', function() {
     describe('$t', function() {
+        it('should create tweener for every prop', function() {
+            var t = Twain();
 
-    });
+            t.tweens.x = Tween().from(10).to(123)
+            
+            t.from({
+                y: 20
+            }).to({
+                y: 456
+            });
 
-    describe('from', function() {
+            t.$t('x')._from.should.eql(10);
+            t.$t('x')._to.should.eql(123);
 
-    });
+            t.$t('y')._from.should.eql(20);
+            t.$t('y')._to.should.eql(456);
+        });
 
-    describe('to', function() {
 
     });
 

@@ -24,7 +24,7 @@ tween.update(function(step) {
         box.style[prop] = step[prop] + 'px';
     }
 
-    // fyi: if you had jquery, you could do -
+    // or if you had jquery, you could do -
     // $(box).css(step);
 
 });

@@ -24,7 +24,7 @@
 
     </div>
 
-    <script src="../twain.js"></script>
+    <script src="../lib/twain.js"></script>
     <script>
 
         var box = document.getElementById('box'),
@@ -34,6 +34,7 @@
             for(var prop in step) {
                 box.style[prop] = step[prop] + 'px';
             }
+            // alternately, $(box).css(step);
         });
 
         // update targets with every mousemove

@@ -43,6 +43,25 @@ setInterval(function(){
 
 ```   
 
+## Tests 
+
+Install dependencies with 
+```
+npm install
+```
+then run
+```
+npm test
+```
+
+## Coverage
+
+```
+npm run-script coverage
+```
+
+
+
 ## License
 
   MIT

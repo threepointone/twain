@@ -1,4 +1,4 @@
-var Twain = require('../twain'),
+var Twain = require('../'),
     Tween = Twain.Tween,
     util = Twain.util,
     should = require('should');

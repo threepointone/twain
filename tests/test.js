@@ -133,20 +133,21 @@ describe('Tween', function() {
 
 
             t.from(0).to(1);
+            t.update(function() {
+                ticker.tick();
+            });
             // first tick and update to get the basics set
-            ticker.tick();
             t.update();
 
             // next tick should start the tweening
-            ticker.tick();
             t.update();
             (t.curr === 0.15).should.be.ok;
 
             // one more time to be sure
-            ticker.tick();
             t.update();
 
             (Math.abs(t.curr - 0.2775) < 0.001).should.be.ok;
+            ticker.reset();
 
         });
 
@@ -165,15 +166,26 @@ describe('Tween', function() {
 
 describe('Twain', function() {
     describe('$t', function() {
-        it('should create tweener for every prop', function() {
-            var t = Twain();
+        it('should create tweener for every prop, and step through it', function() {
 
-            t.tweens.x = Tween().from(10).to(123)
-            
+
+            var t = Twain({
+                now: ticker
+            });
+
+            t.tweens.x = Tween({
+                now: ticker
+            }).from(10).to(123)
+
+
             t.from({
                 y: 20
             }).to({
                 y: 456
+            });
+
+            t.update(function() {
+                ticker.tick();
             });
 
             t.$t('x')._from.should.eql(10);
@@ -181,16 +193,20 @@ describe('Twain', function() {
 
             t.$t('y')._from.should.eql(20);
             t.$t('y')._to.should.eql(456);
+
+            // first tick to set everything down
+            t.update();
+
+            // next tick starts showing diffs
+            t.update();
+
+            (t.curr().x > 10).should.be.ok;
+            (t.curr().y > 20).should.be.ok;
+
+            ticker.reset();
+
         });
 
-
-    });
-
-    describe('step', function() {
-
-    });
-
-    describe('update', function() {
 
     });
 

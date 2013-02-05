@@ -28,7 +28,7 @@
     <script>
 
         var box = document.getElementById('box'),
-            tween = Twain();  // start up a new tweener
+            tween = Twain().from({left:0, top:0});  // start up a new tweener
 
         tween.update(function(step) {
             for(var prop in step) {

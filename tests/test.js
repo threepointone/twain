@@ -31,7 +31,7 @@ describe('util', function() {
         });
 
         it('should cycle through an object', function() {
-            var str = '',
+            var str = '', pre= '',
                 obj = {
                     a: 1,
                     b: 2,
@@ -39,9 +39,10 @@ describe('util', function() {
                 };
 
             util.each(obj, function(el, key) {
+                pre+=key;
                 str += el;
             });
-
+            pre.should.equal('abc');
             str.should.eql('123');
         });
 
@@ -141,12 +142,12 @@ describe('Tween', function() {
 
             // next tick should start the tweening
             t.update();
-            (t.curr === 0.15).should.be.ok;
+            (t.value === 0.15).should.be.ok;
 
             // one more time to be sure
             t.update();
 
-            (Math.abs(t.curr - 0.2775) < 0.001).should.be.ok;
+            (Math.abs(t.value - 0.2775) < 0.001).should.be.ok;
             ticker.reset();
 
         });
@@ -200,8 +201,8 @@ describe('Twain', function() {
             // next tick starts showing diffs
             t.update();
 
-            (t.curr().x > 10).should.be.ok;
-            (t.curr().y > 20).should.be.ok;
+            (t.value.x > 10).should.be.ok;
+            (t.value.y > 20).should.be.ok;
 
             ticker.reset();
 

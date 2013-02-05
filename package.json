@@ -4,7 +4,7 @@
   "description": "dynamic tweening engine",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha tests/test.js",
+    "test": "node_modules/.bin/mocha tests/test.js --reporter list",
     "coverage": "rm -rf lib-cov/ && jscoverage lib lib-cov && ./node_modules/.bin/mocha tests/test.js --reporter html-cov > coverage.html && open coverage.html && rm -rf lib-cov"
   },
   "devDependencies":{

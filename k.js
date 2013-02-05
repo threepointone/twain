@@ -5,7 +5,9 @@ require('k')({
 .clean()
 .read()
 .compress().write()
-.log('built dist/twain.min.js')
+.fn(function(done){
+    console.log('built dist/twain.min.js:', (this.files[0].content.length/1000) + 'k')    
+})
 .fail(function(err){
     console.log('ERROR' + err);
 });

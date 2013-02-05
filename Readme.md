@@ -3,6 +3,8 @@
 
   dynamic tweening engine
 
+  [![Build Status](https://travis-ci.org/threepointone/twain.png?branch=master)](https://travis-ci.org/threepointone/twain)
+
 ## Installation
 
     $ component install threepointone/twain

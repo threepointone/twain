@@ -177,7 +177,7 @@
     extend(Twain.prototype, {
         // convenience to get a tween for a prop
         $t: function(prop, opts) {
-            return(this.tweens[prop] || (this.tweens[prop] = Twain.Tween(extend({}, this.config, opts))));
+            return(this.tweens[prop] || (this.tweens[prop] = Tween(extend({}, this.config, opts))));
         },
 
         from: function(from) {

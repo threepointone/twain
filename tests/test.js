@@ -131,17 +131,17 @@ describe('Tween', function() {
 
     describe('step', function() {
         it('should take a step', function() {
-            var timer = ticker();
+
             var t = Tween({
-                now: timer,
+                now: ticker(),
                 multiplier: 0.15
-            });
+            }).from(0).to(1);
 
 
-            t.from(0).to(1);
             t.update(function() {
-                timer.tick();
+                t.now.tick();
             });
+
             // first tick and update to get the basics set
             t.update();
 

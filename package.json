@@ -2,9 +2,9 @@
   "name": "twain",
   "version": "0.0.2",
   "description": "dynamic tweening engine",
-  "main": "index.js",
+  "main": "lib/twain.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha tests/test.js --reporter list",
+    "test": "node_modules/.bin/mocha tests/test.js --reporter spec",
     "coverage": "rm -rf lib-cov/ && jscoverage lib lib-cov && TWAIN_COV=1 ./node_modules/.bin/mocha tests/test.js --reporter html-cov > coverage.html && open coverage.html && rm -rf lib-cov",
     "k": "node k"
   },

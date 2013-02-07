@@ -151,7 +151,6 @@ describe('Tween', function() {
 
             // one more time to be sure
             t.update();
-
             (Math.abs(t.value - 0.2775) < 0.001).should.be.ok;
 
         });

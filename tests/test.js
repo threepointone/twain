@@ -7,12 +7,14 @@ var Twain = process.env.TWAIN_COV ? require('../lib-cov/twain') : require('../li
 function ticker() {
     var time = 0;
 
-    var f = function() {
-            return time;
-        };
+    function f() {
+        return time;
+    }
+
     f.tick = function() {
         time++;
-    }
+    };
+
     return f;
 };
 

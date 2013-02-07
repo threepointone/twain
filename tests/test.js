@@ -4,16 +4,18 @@ var Twain = process.env.TWAIN_COV ? require('../lib-cov/twain') : require('../li
     should = require('should');
 
 
-var time = 0;
-var ticker = function() {
-        return time;
-    };
-ticker.tick = function() {
-    time++;
+function ticker() {
+    var time = 0;
+
+    var f = function() {
+            return time;
+        };
+    f.tick = function() {
+        time++;
+    }
+    return f;
 };
-ticker.reset = function() {
-    time = 0;
-};
+
 
 describe('util', function() {
 
@@ -127,16 +129,16 @@ describe('Tween', function() {
 
     describe('step', function() {
         it('should take a step', function() {
-            ticker.reset();
+            var timer = ticker();
             var t = Tween({
-                now: ticker,
+                now: timer,
                 multiplier: 0.15
             });
 
 
             t.from(0).to(1);
             t.update(function() {
-                ticker.tick();
+                timer.tick();
             });
             // first tick and update to get the basics set
             t.update();
@@ -149,7 +151,6 @@ describe('Tween', function() {
             t.update();
 
             (Math.abs(t.value - 0.2775) < 0.001).should.be.ok;
-            ticker.reset();
 
         });
 
@@ -157,7 +158,9 @@ describe('Tween', function() {
 
     });
     describe('stop', function() {
-        it('should allow an animation to be paused and restarted');
+        it('should allow a tween to be paused and restarted', function() {
+            var t = Tween();
+        });
     });
 
 });
@@ -166,13 +169,14 @@ describe('Twain', function() {
     describe('$t', function() {
         it('should create tweener for every prop, and step through it', function() {
 
+            var timer = ticker();
 
             var t = Twain({
-                now: ticker
+                now: timer
             });
 
             t.tweens.x = Tween({
-                now: ticker
+                now: timer
             }).from(10).to(123)
 
 
@@ -183,7 +187,7 @@ describe('Twain', function() {
             });
 
             t.update(function() {
-                ticker.tick();
+                timer.tick();
             });
 
             t.$t('x')._from.should.eql(10);
@@ -201,11 +205,13 @@ describe('Twain', function() {
             (t.value.x > 10).should.be.ok;
             (t.value.y > 20).should.be.ok;
 
-            ticker.reset();
 
         });
     });
     describe('stop', function() {
-        it('should allow an animation to be paused and restarted');
+        it('should allow a twain to be paused and restarted', function(done) { // async test
+            // just run stop? 
+            done();
+        });
     });
 });

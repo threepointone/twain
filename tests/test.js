@@ -129,6 +129,30 @@ describe('Tween', function() {
 
     });
 
+    it('should allow for nesting twains', function(){
+        var timer = ticker();
+        var t = Twain({now:timer}).from({
+            x:{
+                y:{
+                    z:10
+                }
+            }
+        }).update(function(){ timer.tick(); });
+
+        t.to({
+            x:{
+                y:{
+                    z:20
+                }
+            }
+        });
+
+        t.update().update().update().update();
+        (t.tweens.x.tweens.y.tweens.z.value > 10).should.be.ok;
+        (t.tweens.x.tweens.y.tweens.z.value < 20).should.be.ok;
+
+    });
+
     describe('step', function() {
         it('should take a step', function() {
 
@@ -159,9 +183,7 @@ describe('Tween', function() {
 
     });
     describe('stop', function() {
-        it('should allow a tween to be paused and restarted', function() {
-            var t = Tween();
-        });
+        it('should allow a tween to be paused and restarted');
     });
 
 });
@@ -210,9 +232,11 @@ describe('Twain', function() {
         });
     });
     describe('stop', function() {
-        it('should allow a twain to be paused and restarted', function(done) { // async test
-            // just run stop? 
-            done();
-        });
+        it('should allow a twain to be paused and restarted');
+    });
+
+    describe('encode/decode', function(){
+        it('should allow for random input to encoded into a a twain hash');
+        it('should allow for step value to decoded into a custom format');
     });
 });

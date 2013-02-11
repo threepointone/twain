@@ -1,7 +1,7 @@
 
 # twain
 
-  dynamic tweening engine
+  dynamic tweening engine using exponential smoothing
 
   [![Build Status](https://travis-ci.org/threepointone/twain.png?branch=master)](https://travis-ci.org/threepointone/twain)
 

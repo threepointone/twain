@@ -182,6 +182,12 @@ describe('Tween', function() {
 
 
     });
+
+    describe('multiply', function(){
+        it('should set multiplier');
+        it('should set multiplier as result of a function');
+    });
+
     describe('stop', function() {
         it('should allow a tween to be paused and restarted');
     });
@@ -231,6 +237,26 @@ describe('Twain', function() {
 
         });
     });
+
+    describe('multiply', function(){
+        it('should set multiplier across all subtweens', function(){
+            var t = Twain({
+                now: ticker(),
+                multiplier: 0.15
+            }).from({x:0, y:{z:0}}).to({x:100, y:{z:100}});
+
+
+            t.update(function() {
+                t.now.tick();
+            });
+
+            t.multiply(0.01);
+            t.tweens.x.multiplier.should.eql(0.01);
+            t.tweens.y.tweens.z.multiplier.should.eql(0.01);
+
+        });
+    });
+
     describe('stop', function() {
         it('should allow a twain to be paused and restarted');
     });

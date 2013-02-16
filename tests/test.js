@@ -251,8 +251,29 @@ describe('Twain', function() {
             });
 
             t.multiply(0.01);
+
             t.tweens.x.multiplier.should.eql(0.01);
             t.tweens.y.tweens.z.multiplier.should.eql(0.01);
+
+        });
+
+        it('should set accept a function to multiply with', function(){
+            var t = Twain({
+                now: ticker(),
+                multiplier: 0.15
+            }).from({x:0, y:{z:0}}).to({x:100, y:{z:100}});
+
+
+            t.update(function() {
+                t.now.tick();
+            });
+
+            t.multiply(function(){
+                return 0.001;
+            });
+
+            t.tweens.x.multiplier.should.eql(0.001);
+            t.tweens.y.tweens.z.multiplier.should.eql(0.001);
 
         });
     });

@@ -1,52 +1,15 @@
-// some helper functions
-var nativeForEach = [].forEach,
-    slice = [].slice,
-    has = {}.hasOwnProperty;
-
-function each(obj, iterator, context) {
-    if (obj == null) return;
-    if (nativeForEach && obj.forEach === nativeForEach) {
-        obj.forEach(iterator, context);
-    } else if (obj.length === +obj.length) {
-        for (var i = 0, l = obj.length; i < l; i++) {
-            if (iterator.call(context, obj[i], i, obj) === {}) return;
-        }
-    } else {
-        for (var key in obj) {
-            if (has.call(obj, key)) {
-                if (iterator.call(context, obj[key], key, obj) === {}) return;
-            }
-        }
-    }
-}
+var _ = require('fn');
 
 function collect(obj, fn) {
     var o = {};
-    each(obj, function(el, index) {
+    _.each(obj, function(el, index) {
         o[index] = (typeof fn === 'string') ? el[fn] : fn(el, index);
     });
     return o;
 }
 
-function extend(obj) {
-    each(slice.call(arguments, 1), function(source) {
-        each(source, function(val, prop){
-            obj[prop] = val;
-        });        
-    });
-    return obj;
-}
-
-function isValue(v) {
-    return v != null; // matches undefined and null
-}
-
 function abs(n) {
     return n < 0 ? -n : n;
-}
-
-function identity(x) {
-    return x;
 }
 
 // defaults for a single tweener. pass these params into constructor to change the nature of the animation
@@ -68,31 +31,33 @@ var defaults = {
 function Tween(config) {
     if (!(this instanceof Tween)) return new Tween(config);
 
-    this.config = config = extend({}, config);
+    this.config = config = _.extend({}, config);
+
+    var t = this;
 
     // merge the defaults with self
-    each(defaults, function(val, key) {
-        this[key] = isValue(config[key]) ? config[key] : val;
-    }, this);
+    _.each(defaults, function(val, key) {
+        t[key] = _.isValue(config[key]) ? config[key] : val;
+    });
 }
 
-extend(Tween.prototype, {
+_.extend(Tween.prototype, {
     // Number: defines 'origin', ie - the number to start from
     from: function(from) {
         this._from = this.value = from;
-        isValue(this._to) || this.to(from);
+        _.isValue(this._to) || this.to(from);
         return this;
     },
     // Number: defines 'destinations', ie - the number to go to
     to: function(to) {
-        isValue(this._from) || this.from(to);
+        _.isValue(this._from) || this.from(to);
         this._to = to;
         return this;
     },
     // run one step of the tween. updates internal variables, and return spec object for this 'instant'
     step: function() {
 
-        isValue(this.time) || (this.time = this.now());
+        _.isValue(this.time) || (this.time = this.now());
 
         // this is the heart of the whole thing, really. 
         // an implementation of an exponential smoothing function
@@ -156,21 +121,21 @@ extend(Tween.prototype, {
 function Twain(obj) {
     if (!(this instanceof Twain)) return new Twain(obj);
 
-    extend(this, {
+    _.extend(this, {
         config: obj || {},
         tweens: {}
     });
 
-    this.encode = this.config.encode || identity;
-    this.decode = this.config.decode || identity;
+    this.encode = this.config.encode || _.identity;
+    this.decode = this.config.decode || _.identity;
 
     // reset the config encode/decode functions. we don't want it to propogate through
     // ... or do we?        
-    this.config.encode = this.config.decode = identity;
+    this.config.encode = this.config.decode = _.identity;
 
 }
 
-extend(Twain.prototype, {
+_.extend(Twain.prototype, {
     // convenience to get a tween for a prop, and generate if required.
     // send T == true to generate a nested twain instead
     $t: function(prop, T) {
@@ -178,18 +143,20 @@ extend(Twain.prototype, {
     },
 
     from: function(_from) {
+        var t = this;
         var from = this.encode(_from);
-        each(from, function(val, prop) {
-            this.$t(prop, typeof val === 'object').from(val);
-        }, this);
+        _.each(from, function(val, prop) {
+            t.$t(prop, typeof val === 'object').from(val);
+        });
         return this;
     },
 
     to: function(_to) {
+        var t = this;
         var to = this.encode(_to);
-        each(to, function(val, prop) {
-            this.$t(prop, typeof val === 'object').to(val);
-        }, this);
+        _.each(to, function(val, prop) {
+            t.$t(prop, typeof val === 'object').to(val);
+        });
         return this;
     },
 
@@ -205,7 +172,7 @@ extend(Twain.prototype, {
     },
 
     multiply: function(n) {
-        each(this.tweens, function(t) {
+        _.each(this.tweens, function(t) {
             t.multiply(n);
         });
     },
@@ -220,7 +187,7 @@ extend(Twain.prototype, {
         return this;
     },
     stop: function() {
-        each(this.tweens, function(tween) {
+        _.each(this.tweens, function(tween) {
             tween.stop();
         });
         return this;

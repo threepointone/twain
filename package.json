@@ -3,16 +3,10 @@
   "version": "0.0.2",
   "description": "dynamic tweening engine",
   "main": "lib/twain.js",
-  "scripts": {
-    "test": "node_modules/.bin/mocha tests/test.js --reporter spec",
-    "coverage": "rm -rf lib-cov/ && jscoverage lib lib-cov && TWAIN_COV=1 ./node_modules/.bin/mocha tests/test.js --reporter html-cov > coverage.html && open coverage.html && rm -rf lib-cov",
-    "k": "node k"
-  },
-  "devDependencies":{
-    "k":"git://github.com/threepointone/k.git",
+  "devDependencies": {
     "mocha": "*",
     "should": "*"
-    },
+  },
   "repository": "",
   "keywords": [
     "dynamic",
@@ -20,5 +14,8 @@
   ],
   "author": "Sunil Pai",
   "license": "BSD",
-  "readmeFilename": "Readme.md"
+  "readmeFilename": "Readme.md",
+  "dependencies": {
+    "fn": "git://github.com/threepointone/fn.git"
+  }
 }

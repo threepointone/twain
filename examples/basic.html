@@ -22,11 +22,11 @@
 <body>
     <div id='box'></div>
 
-    <script src="../lib/twain.js"></script>
+    <script src="../dist/twain.js"></script>
     <script>
 
         var box = document.getElementById('box'),
-            tween = Twain().from({left:0, top:0});  // start up a new tweener
+            tween = twain().from({left:0, top:0});  // start up a new tweener
 
         tween.update(function(step) {
             for(var prop in step) {

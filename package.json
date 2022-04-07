@@ -16,6 +16,6 @@
   "license": "BSD",
   "readmeFilename": "Readme.md",
   "dependencies": {
-    "fn": "git://github.com/threepointone/fn.git"
+    "fn": "git+https://github.com/threepointone/fn.git"
   }
 }
